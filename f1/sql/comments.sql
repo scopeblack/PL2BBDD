@@ -1,0 +1,116 @@
+-- /* ESQUEMA FINAL */
+-- CREATE SCHEMA IF NOT EXISTS pl1final;
+
+-- \echo 'creando la tabla circuits'
+-- CREATE TABLE IF NOT EXISTS pl1final.circuits(
+--     circuit_id      INTEGER NOT NULL,
+--     circuit_ref     TEXT,
+--     name            TEXT NOT NULL,
+--     location        TEXT,
+--     country         TEXT,
+--     lat             REAL,
+--     lng             REAL,
+--     alt             INTEGER,
+--     url             TEXT
+-- );
+
+-- \echo 'creando la tabla constructors'
+-- CREATE TABLE IF NOT EXISTS pl1final.constructors(
+--     constructor_id   INTEGER NOT NULL,
+--     constructor_ref  TEXT,
+--     name             TEXT NOT NULL,
+--     nationality      TEXT,
+--     url              TEXT
+-- );
+
+-- \echo 'creando la tabla drivers'
+-- CREATE TABLE IF NOT EXISTS pl1final.drivers(
+--     driverId        INTEGER NOT NULL,
+--     driverRef       TEXT,
+--     number          INTEGER,
+--     code            TEXT,
+--     forename        TEXT,
+--     surname         TEXT,
+--     dob             TEXT,
+--     nationality     TEXT,
+--     url             TEXT
+--     CONSTRAINT piloto_pk PRIMARY KEY (pilotoRef)
+-- );
+
+-- \echo 'creando la tabla lap_times'
+-- CREATE TABLE IF NOT EXISTS pl1final.lap_times(
+--     raceId          INTEGER NOT NULL,
+--     driverId        INTEGER,
+--     lap             INTEGER,
+--     position        INTEGER,
+--     time            TEXT,
+--     milliseconds    INTEGER
+-- );
+
+-- \echo 'creando la tabla pit_stops'
+-- CREATE TABLE IF NOT EXISTS pl1final.pit_stops(
+--     raceId          INTEGER NOT NULL,
+--     driverId        INTEGER,
+--     stop            INTEGER,
+--     lap             INTEGER,
+--     time            TEXT,
+--     duration        TEXT,
+--     milliseconds    INTEGER
+-- );
+
+-- \echo 'creando la tabla qualifying'
+-- CREATE TABLE IF NOT EXISTS pl1final.qualifying(
+--     qualifyId       INTEGER NOT NULL,
+--     raceId          INTEGER,
+--     driverId        INTEGER,
+--     constructorId   INTEGER,
+--     number          INTEGER,
+--     position        INTEGER,
+--     q1              TEXT,
+--     q2              TEXT,
+--     q3              TEXT
+-- );
+
+-- \echo 'creando la tabla races'
+-- CREATE TABLE IF NOT EXISTS pl1final.races(
+--     raceId          INTEGER NOT NULL,
+--     year            INTEGER,
+--     round           INTEGER,
+--     circuitId       INTEGER,
+--     name            TEXT,
+--     date            TEXT,
+--     time            TEXT,
+--     url             TEXT,
+--     fp1_date        TEXT,
+--     fp1_time        TEXT,
+--     fp2_date        TEXT,
+--     fp2_time        TEXT,
+--     fp3_date        TEXT,
+--     fp3_time        TEXT,
+--     quali_date      TEXT,
+--     quali_time      TEXT,
+--     sprint_date     TEXT,
+--     sprint_time     TEXT
+-- );
+
+-- \echo 'creando la tabla results'
+-- CREATE TABLE IF NOT EXISTS pl1final.results(
+--     results_id              INTEGER NOT NULL,
+--     gpid                    INTEGER,
+--     driver_id               INTEGER,
+--     team_id                 INTEGER,
+--     number                  INTEGER,
+--     grid_position           INTEGER,
+--     position                INTEGER,      
+--     position_text           TEXT,          
+--     position_order          INTEGER,
+--     points                  REAL,
+--     laps                    INTEGER,
+--     time                    TEXT,            
+--     time_milliseconds       INTEGER,
+--     fastest_lap             INTEGER,
+--     championship_rank       INTEGER,
+--     fastest_lap_time        TEXT,            
+--     fastest_lap_speed       REAL,           
+--     status_id               INTEGER
+-- );
