@@ -54,10 +54,10 @@ CREATE TABLE IF NOT EXISTS ddbb.pit_stops(
     raceId          TEXT,
     driverId        TEXT,
     stop            TEXT,
-    lap             TEXT,
-    time            TEXT,
+    lap_pitstop             TEXT,
+    time_pitstop    TEXT,
     duration        TEXT,
-    milliseconds    TEXT
+    milliseconds_pitstop    TEXT
 );
 
 \echo 'creando la tabla qualifying'
@@ -296,16 +296,16 @@ CREATE TABLE IF NOT EXISTS pl1final.lap_times (
 -- PIT_STOPS
 -- ================================================
 CREATE TABLE IF NOT EXISTS pl1final.pit_stops (
-    driver_ref      TEXT,
+    driverRef      TEXT,
     name            TEXT,
-    lap             INTEGER,
+    lap_pitstop             INTEGER,
     stop            INTEGER,
-    time            TEXT,
+    time_pitstop            TEXT,
     duration        TEXT,
-    milliseconds    INTEGER,
-    PRIMARY KEY (driver_ref, stop, name, lap),
+    milliseconds_pitstop    INTEGER,
+    PRIMARY KEY (driverRef, stop, name, lap_pitstop),
     CONSTRAINT fk_pit_stops_lap
-        FOREIGN KEY (name, driver_ref, lap)
+        FOREIGN KEY (name, driverRef, lap_pitstop)
         REFERENCES pl1final.lap_times(name, driver_ref, lap)
 );
 
@@ -358,11 +358,10 @@ FROM ddbb.constructors;
 
 
 \echo 'Cargando la tabla gps'
-INSERT INTO pl1final.races (year, round, circuit_id, name, date, time, url,
+INSERT INTO pl1final.races (year, round, name, date, time, url,
     fp1_date, fp1_time, fp2_date, fp2_time, fp3_date, fp3_time,
     quali_date, quali_time, sprint_date, sprint_time)
 SELECT DISTINCT ON (raceId)
-    --raceId::INTEGER,
     year::INTEGER,
     round::INTEGER,
     name,
@@ -382,23 +381,18 @@ SELECT DISTINCT ON (raceId)
 FROM ddbb.races;
 
 
-\echo 'Cargando la tabla status'
-INSERT INTO pl1final.status (status_id, status)
-SELECT DISTINCT ON (statusId)
-    statusId::INTEGER,
-    status
-FROM ddbb.status;
+--\echo 'Cargando la tabla status'
+--INSERT INTO pl1final.status (status)
+--SELECT DISTINCT ON (statusId)
+--    status
+--FROM ddbb.status;
 
 
 \echo 'Cargando la tabla results'
-INSERT INTO pl1final.results (result_id, race_id, driver_id, constructor_id, number, grid, position,
+INSERT INTO pl1final.results (number, grid, position,
     position_text, position_order, points, laps, time, milliseconds,
-    fastest_lap, rank, fastest_lap_time, fastest_lap_speed, status_id)
+    fastest_lap, rank, fastest_lap_time, fastest_lap_speed)
 SELECT DISTINCT ON (resultados_id)
-    --resultados_id::INTEGER,
-    gpid::INTEGER,
-    pilotoid::INTEGER,
-    escuderiaid::INTEGER,
     número::INTEGER,
     pos_parrilla::INTEGER,
     posición::INTEGER,
@@ -411,31 +405,26 @@ SELECT DISTINCT ON (resultados_id)
     vueltarápida::INTEGER,
     puesto_campeonato::INTEGER,
     vueltarápida_tiempo,
-    vueltarápida_velocidad::REAL,
-    estadoid::INTEGER
+    vueltarápida_velocidad::REAL
 FROM ddbb.results;
 
-INERT INTO pl1final.results(status)
+INSERT INTO pl1final.results(status)
 SELECT DISTINCT ON (statusId)
     status
 FROM ddbb.status;
 
 
 \echo 'Cargando la tabla qualifying'
-INSERT INTO pl1final.qualifying (qualify_id, race_id, driver_id, constructor_id, number, position, q1, q2, q3)
+INSERT INTO pl1final.qualifying (position, q1, q2, q3)
 SELECT DISTINCT ON (qualifyId)
-    --qualifyId::INTEGER,
-    --raceId::INTEGER,
-    --driverId::INTEGER,
-    constructorId::INTEGER,
-    number::INTEGER,
+    --number::INTEGER,
     position::INTEGER,
     q1, q2, q3
 FROM ddbb.qualifying;
 
 
 \echo 'Cargando la tabla lap_times'
-INSERT INTO pl1final.lap_times (race_id, driver_id, lap, position, time, milliseconds)
+INSERT INTO pl1final.lap_times (lap, position, time, milliseconds)
 SELECT DISTINCT ON (raceId, driverId, lap)
     --raceId::INTEGER,
     --driverId::INTEGER,
@@ -447,16 +436,18 @@ FROM ddbb.lap_times;
 
 
 \echo 'Cargando la tabla pit_stops'
-INSERT INTO pl1final.pit_stops (race_id, driver_id, stop, lap, time, duration, milliseconds)
-SELECT DISTINCT ON (raceId, driverId, stop)
+INSERT INTO pl1final.pit_stops (driverRef, stop, name, lap_pitstop, time_pitstop, duration, milliseconds_pitstop)
+SELECT DISTINCT ON (driverRef, stop, name, lap_pitstop)
     --raceId::INTEGER,
     --driverId::INTEGER,
+    driverRef::TEXT,
     stop::INTEGER,
+    name::TEXT,
     lap::INTEGER,
-    time,
+    time_pitstop,
     duration,
-    milliseconds::INTEGER
-FROM ddbb.pit_stops;
+    milliseconds_pitstop::INTEGER
+FROM (ddbb.pit_stops as p JOIN ddbb.lap_times as j ON p.driverId=j.driverId) JOIN ddbb.races as r ON p.raceID=r.raceID JOIN ddbb.drivers as d ON d.driverID=p.driverID;
 
 
 \echo 'Cargando la tabla seasons'
@@ -479,12 +470,12 @@ FROM ddbb.seasons;
 -- ORDER BY totalCarreras DESC;
 
 -- CONSULTA 2 (A MEDIAS)
-SELECT pl1final.drivers.forename, SUM(pl1final.results.points) AS gpSenna 
-FROM pl1final.drivers 
-JOIN pl1final.results ON pl1final.drivers.driver_id = pl1final.results.driver_id 
-WHERE pl1final.drivers.surname = 'Senna' AND pl1final.drivers.forename = 'Ayrton' 
-GROUP BY pl1final.drivers.forename 
-ORDER BY gpSenna DESC;
+--SELECT pl1final.drivers.forename, SUM(pl1final.results.points) AS gpSenna 
+--FROM pl1final.drivers 
+--JOIN pl1final.results ON pl1final.drivers.driver_id = pl1final.results.driver_id 
+--WHERE pl1final.drivers.surname = 'Senna' AND pl1final.drivers.forename = 'Ayrton' 
+--GROUP BY pl1final.drivers.forename 
+--ORDER BY gpSenna DESC;
 
 
 
