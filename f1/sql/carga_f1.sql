@@ -472,10 +472,10 @@ FROM
 -- que ha albergado cada uno. El listado estará ordenado del circuito que haya
 -- acogido más carreras al que menos
 
-SELECT nombre, count(*) as pe
-FROM f1.circuitos as ci JOIN f1.gps as gps ON ci.circuitoref=gps.circuitoref 
-WHERE gps.nombregp LIKE '%Grand Prix%' 
-GROUP BY count(gps.nombregp) ORDER BY pene desc;
+-- SELECT nombre, count(*) as pe
+-- FROM f1.circuitos as ci JOIN f1.gps as gps ON ci.circuitoref=gps.circuitoref 
+-- WHERE gps.nombregp LIKE '%Grand Prix%' 
+-- GROUP BY count(gps.nombregp) ORDER BY pe desc;
 
 -- 2. Muestre el número de grandes premios que ha corrido Ayrton Senna así cómo el
 -- total de puntos conseguidos en las mismas
