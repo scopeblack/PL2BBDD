@@ -5,6 +5,15 @@
 -- ..etc.
 -- --);
 --Se crea la función que se ejecutará
+
+CREATE TABLE auditoria (
+    tipo evento text,
+    nombre_tabla text,
+    usuario text,
+    fecha timestamp,
+    id int PRIMARY KEY AUTO INCREMENTAL 
+);
+
 CREATE OR REPLACE FUNCTION fn_auditoria() RETURNS TRIGGER AS $fn_auditoria$
 DECLARE
 --no declaro nada porque no me hace falta...de hecho DECLARE podría haberlo omitido en este caso
@@ -22,7 +31,47 @@ ELSIF TG_OP='DELETE' THEN
 END;
 $fn_auditoria$ LANGUAGE plpgsql;
 --Se crea el trigger que se dispara cuando hay una inserción, modificación o borrado en cada tabla de la base de datos discos
-CREATE TRIGGER tg_auditoria after INSERT or UPDATE or DELETE
+ 
+ 
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+    ON f1.pilotos FOR EACH ROW
+    EXECUTE PROCEDURE fn_auditoria();
+
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
     ON f1.escuderías FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
+
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+    ON f1.circuitos FOR EACH ROW
+    EXECUTE PROCEDURE fn_auditoria();
+
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+    ON f1.gps FOR EACH ROW
+    EXECUTE PROCEDURE fn_auditoria();
+
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+    ON f1.resultados FOR EACH ROW
+    EXECUTE PROCEDURE fn_auditoria();
+
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+    ON f1.vueltas FOR EACH ROW
+    EXECUTE PROCEDURE fn_auditoria();
+
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+    ON f1.pit_stops FOR EACH ROW
+    EXECUTE PROCEDURE fn_auditoria();
+
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+    ON f1.calificación FOR EACH ROW
+    EXECUTE PROCEDURE fn_auditoria();
+
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+    ON f1.temporadas FOR EACH ROW
+    EXECUTE PROCEDURE fn_auditoria();
+
+CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+    ON f1.estados FOR EACH ROW
+    EXECUTE PROCEDURE fn_auditoria();
+
+
 --Lo mismo para cada tabla
