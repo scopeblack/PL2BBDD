@@ -1,3 +1,22 @@
+
+-- Uno de los usuarios será administrador que debe de poder ejecutar cualquier
+-- operación sobre la base de datos.
+-- • Un usuario gestor de competiciones que debe de poder manejar los datos de
+-- la base de datos (inserción, actualización, borrado y consulta), pero no debe
+-- de poder crear nuevas tablas ni elementos que afecten a la estructura de la base
+-- de datos.
+-- • Un usuario analista que sólo puede realizar consultas a la base de datos.
+-- • Un usuario invitado que sólo puede consultar los resultados de las carreras, de
+-- los pilotos, grandes premios, escuderías, circuitos y temporadas. Pero no
+-- puede consultar los tiempos por vuelta ni las paradas en boxes.
+-- A entregar: Sección en el documento de la memoria donde se detallan los
+-- permisos asignados a los usuarios, sentencias SQL con las órdenes que crean los
+-- usuarios y les conceden los permisos, y sentencias SQL con las consultas que prueban
+-- que los usuarios están creados correctamente y los permisos funcionan como deben.
+
+
+
+
 ------------------------------------------------------------
 -- CREACIÓN DE USUARIOS Y ASIGNACIÓN DE PERMISOS
 ------------------------------------------------------------
@@ -71,7 +90,7 @@ GRANT SELECT ON f1.gps TO invitado_f1;
 GRANT SELECT ON f1.pilotos_corren_gps TO invitado_f1;
 GRANT SELECT ON f1.pilotos_califican_gps TO invitado_f1;
 
--- Tablas NO permitidas: 
+-- Tablas NO permitidas: (REVOKE por si acaso)
 REVOKE ALL ON f1.pilotos_corren_vueltas_gps FROM invitado_f1;
 REVOKE ALL ON f1.pilotos_realizan_paradas_gps FROM invitado_f1;
 

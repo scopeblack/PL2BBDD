@@ -97,7 +97,7 @@
 
 
 
---7. Obtener el nombre de los pilotos que han ganado al menos un GP (posición = 1)
+-- 7. Obtener el nombre de los pilotos que han ganado al menos un GP (posición = 1)
 
 -- SELECT DISTINCT p.nombre, p.apellido
 -- FROM f1.pilotos_corren_gps pcg

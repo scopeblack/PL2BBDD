@@ -1,3 +1,13 @@
+-- Un trigger que se dispare cuando se inserta una nueva carrera de un piloto.
+-- En primer lugar, se creará una tabla donde se contabiliza el número total
+-- de puntos de cada piloto, esta tabla se actualizará después de que se
+-- inserten los resultados de una determinada carrera con los puntos
+-- conseguidos por cada piloto en la misma
+
+
+
+
+
 ------------------------------------------------------------
 --TRIGGER: actualizar puntos totales por piloto
 ------------------------------------------------------------
