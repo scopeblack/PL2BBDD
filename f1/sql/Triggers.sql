@@ -6,71 +6,70 @@
 -- --);
 --Se crea la función que se ejecutará
 
-CREATE TABLE auditoria (
-    tipo evento text,
-    nombre_tabla text,
-    usuario text,
-    fecha timestamp,
-    id int PRIMARY KEY AUTO INCREMENTAL 
+CREATE TABLE f1.auditoria (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    tipo_evento TEXT,
+    nombre_tabla TEXT,
+    usuario TEXT,
+    fecha TIMESTAMP
 );
 
-CREATE OR REPLACE FUNCTION fn_auditoria() RETURNS TRIGGER AS $fn_auditoria$
-DECLARE
---no declaro nada porque no me hace falta...de hecho DECLARE podría haberlo omitido en este caso
+
+CREATE OR REPLACE FUNCTION fn_auditoria()
+RETURNS TRIGGER AS $$
 BEGIN
---Se determina qué acción ha activado el trigger y se inserta un nuevo valor en la tabla dependiendo
---de dicha acción. Junto con la acción se escribe lo que solicita el enunciado
-IF TG_OP='INSERT' THEN
-    INSERT INTO auditoria VALUES ('alta',TG_table_name,TG_OP,current_user,current_timestamp); --Cuando hay una inserción
-ELSIF TG_OP='UPDATE' THEN
-    INSERT INTO auditoria VALUES ('modificación',TG_table_name,TG_OP,current_user,current_timestamp); --Cuando hay una modificación
-ELSIF TG_OP='DELETE' THEN
-    INSERT INTO auditoria VALUES ('borrado',TG_table_name,TG_OP,current_user,current_timestamp); --Cuando hay un borrado
- END IF;
- RETURN NULL;
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO f1.auditoria(tipo_evento, nombre_tabla, usuario, fecha)
+        VALUES ('alta', TG_TABLE_NAME, current_user, CURRENT_TIMESTAMP);
+    ELSIF TG_OP = 'UPDATE' THEN
+        INSERT INTO f1.auditoria(tipo_evento, nombre_tabla, usuario, fecha)
+        VALUES ('modificación', TG_TABLE_NAME, current_user, CURRENT_TIMESTAMP);
+    ELSIF TG_OP = 'DELETE' THEN
+        INSERT INTO f1.auditoria(tipo_evento, nombre_tabla, usuario, fecha)
+        VALUES ('borrado', TG_TABLE_NAME, current_user, CURRENT_TIMESTAMP);
+    END IF;
+
+    RETURN NULL;
 END;
-$fn_auditoria$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
+
 --Se crea el trigger que se dispara cuando hay una inserción, modificación o borrado en cada tabla de la base de datos discos
  
  
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+CREATE TRIGGER tg_auditoria_pilotos AFTER INSERT OR UPDATE OR DELETE
     ON f1.pilotos FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
 
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
-    ON f1.escuderías FOR EACH ROW
+CREATE TRIGGER tg_auditoria_escuderias AFTER INSERT OR UPDATE OR DELETE
+    ON f1.escuderias FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
 
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+CREATE TRIGGER tg_auditoria_circuitos AFTER INSERT OR UPDATE OR DELETE
     ON f1.circuitos FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
 
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+CREATE TRIGGER tg_auditoria_gps AFTER INSERT OR UPDATE OR DELETE
     ON f1.gps FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
 
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
-    ON f1.resultados FOR EACH ROW
+CREATE TRIGGER tg_auditoria_pcgps AFTER INSERT OR UPDATE OR DELETE
+    ON f1.pilotos_corren_gps FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
 
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
-    ON f1.vueltas FOR EACH ROW
+CREATE TRIGGER tg_auditoria_pca AFTER INSERT OR UPDATE OR DELETE
+    ON f1.pilotos_califican_gps FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
 
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
-    ON f1.pit_stops FOR EACH ROW
+CREATE TRIGGER tg_auditoria_pcvg AFTER INSERT OR UPDATE OR DELETE
+    ON f1.pilotos_corren_vueltas_gps FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
 
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
-    ON f1.calificación FOR EACH ROW
+CREATE TRIGGER tg_auditoria_prpg AFTER INSERT OR UPDATE OR DELETE
+    ON f1.pilotos_realizan_paradas_gps FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
 
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
+CREATE TRIGGER tg_auditoria_temporadas AFTER INSERT OR UPDATE OR DELETE
     ON f1.temporadas FOR EACH ROW
-    EXECUTE PROCEDURE fn_auditoria();
-
-CREATE TRIGGER tg_auditoria AFTER INSERT OR UPDATE OR DELETE
-    ON f1.estados FOR EACH ROW
     EXECUTE PROCEDURE fn_auditoria();
 
 

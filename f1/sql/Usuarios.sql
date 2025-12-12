@@ -44,6 +44,8 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA f1 GRANT ALL PRIVILEGES ON TABLES TO admin_f1
 
 CREATE USER gestor_f1 WITH PASSWORD 'gestor123';
 
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA f1 FROM gestor_f1;
+
 -- Permisos en tablas
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA f1 TO gestor_f1;
 
@@ -61,6 +63,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO gestor_f1;
 ------------------------------------------------------------
 
 CREATE USER analista_f1 WITH PASSWORD 'analista123';
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA f1 FROM analista_f1;
 
 GRANT USAGE ON SCHEMA f1 TO analista_f1;
 GRANT SELECT ON ALL TABLES IN SCHEMA f1 TO analista_f1;
@@ -81,9 +85,11 @@ CREATE USER invitado_f1 WITH PASSWORD 'invitado123';
 
 GRANT USAGE ON SCHEMA f1 TO invitado_f1;
 
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA f1 FROM invitado_f1;
+
 -- Tablas permitidas:
 GRANT SELECT ON f1.pilotos TO invitado_f1;
-GRANT SELECT ON f1.escuderías TO invitado_f1;
+GRANT SELECT ON f1.escuderias TO invitado_f1;
 GRANT SELECT ON f1.circuitos TO invitado_f1;
 GRANT SELECT ON f1.temporadas TO invitado_f1;
 GRANT SELECT ON f1.gps TO invitado_f1;
