@@ -18,6 +18,15 @@ CREATE TABLE IF NOT EXISTS f1.puntos_totales (
     puntos_totales INT DEFAULT 0
 );
 
+-- Carga inicial
+INSERT INTO f1.puntos_totales (pilotoref, puntos_totales)
+SELECT pilotoref, SUM(puntos)
+FROM f1.pilotos_corren_gps
+GROUP BY pilotoref;
+
+
+
+
 \echo 'Creando función del trigger para sumar puntos'
 CREATE OR REPLACE FUNCTION f1.actualizar_puntos_piloto()
 RETURNS TRIGGER AS $$

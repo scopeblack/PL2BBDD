@@ -57,8 +57,8 @@ def ask_conn_parameters():
     """
     host = 'localhost'                                                          # 
     port = ask_port('TCP port number: ')                                        # pide un puerto TCP
-    user = "admin_f1"#input("Introduce el usuario: ")             #'admin_f1'              # TODO
-    password = "admin123" #input("Introduce la contraseña del usuario: ")       #'admin123' # TODO
+    user = input("Introduce el usuario: ")             #'admin_f1'              # TODO
+    password = input("Introduce la contraseña del usuario: ")       #'admin123' # TODO
     database = 'f1'                                                             # TODO
     return (host, port, user,
              password, database)
@@ -159,9 +159,11 @@ def main():
             match modo:
                 case 3:
                     consulta = "INSERT INTO f1."
-                    consulta += input("tabla (valores)")
+                    consulta += input("tabla (valores): ")
                     consulta += " VALUES"
-                    consulta += " " + input("valores")
+                    consulta += " ("
+                    consulta += input("valores: ")
+                    consulta += ")"
                     consulta += ";"
                 case 2:
                     consulta = input("Introduce la consulta SQL a ejecutar: ")           # pide una consulta SQL
@@ -174,14 +176,17 @@ def main():
                     
             cur = conn.cursor()                                                 # instacia un cursor
 
-            query   = consulta  #'SELECT * FROM f1.pilotos'                         # prepara una consulta
+            query   = consulta                                               # prepara una consulta
             if(consulta!="exit"):
-                cur.execute(query)
-                if(consulta[0] == "S"):                                                      # ejecuta la consulta
+                cur.execute(query)                                                  # ejecuta la consulta
+                if consulta.strip().upper().startswith("SELECT"):                           
                     for record in cur.fetchall():                                           # fetchall devuelve todas las filas de la consulta
                         print(record)                                                       # imprime las filas
-            cur.close                                                               # cierra el cursor
-            conn.close                                                              # cierra la conexion
+                else:
+                    # INSERT, UPDATE, DELETE → guardar cambios
+                    conn.commit()
+        cur.close                                                               # cierra el cursor
+        conn.close                                                              # cierra la conexion
     except portException:
         print("The port is not valid!")
     except KeyboardInterrupt:
